@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const nodemailer = require("nodemailer");
 const cryptoPackage = require("crypto");
 
 const app = express();
@@ -26,9 +25,13 @@ mongoose
     console.log("Connected to the database 🎉");
   })
   .catch((error) => {
-    console.log("Error ❗ ", error);
+    console.log("Error ❗", error);
   });
 
 app.listen(port, () => {
   console.log(`Server is running on https://localhost:${port}`);
 });
+
+const userRouter = require("./routers/user");
+
+app.use("/register", userRouter);

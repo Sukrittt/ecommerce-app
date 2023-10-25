@@ -96,7 +96,7 @@ const Register = () => {
 
         <View style={{ marginTop: 80 }}>
           <TouchableOpacity style={styles.actionButton}>
-            <Text style={styles.actionText}>Login</Text>
+            <Text style={styles.actionText}>Register</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
