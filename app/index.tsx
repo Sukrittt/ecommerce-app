@@ -1,25 +1,18 @@
-import { View, Text, StyleSheet } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import React from "react";
+import { useRouter } from "expo-router";
 
 const Home = () => {
+  const router = useRouter();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.containerText}>Going to build Amaon app here 🎉</Text>
-    </View>
+    <>
+      <Text>Home</Text>
+      <TouchableOpacity onPress={() => router.push("/login")}>
+        <Text>Login</Text>
+      </TouchableOpacity>
+    </>
   );
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  containerText: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-});
