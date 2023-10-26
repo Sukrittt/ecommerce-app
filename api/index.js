@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const cryptoPackage = require("crypto");
 
 const app = express();
 const port = 8000;
@@ -11,8 +10,6 @@ app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-const jwt = require("jsonwebtoken");
 
 const dbUrl = "mongodb+srv://sukrit:sukrit@cluster0.eqboegp.mongodb.net/";
 
@@ -25,7 +22,7 @@ mongoose
     console.log("Connected to the database 🎉");
   })
   .catch((error) => {
-    console.log("Error ❗", error);
+    console.log("Error❗", error);
   });
 
 app.listen(port, () => {
@@ -34,4 +31,4 @@ app.listen(port, () => {
 
 const userRouter = require("./routers/user");
 
-app.use("/register", userRouter);
+app.use("/user", userRouter);

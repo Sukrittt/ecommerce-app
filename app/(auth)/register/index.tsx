@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import {
+  ActivityIndicator,
+  Alert,
   Image,
   KeyboardAvoidingView,
   SafeAreaView,
@@ -12,6 +14,8 @@ import {
 } from "react-native";
 
 import { Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
+import axios from "axios";
+import { API_ENDPOINT } from "../../../config";
 
 const Register = () => {
   const router = useRouter();
@@ -19,6 +23,31 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    setLoading(true);
+    const user = { name, email, password };
+
+    try {
+      await axios.post(`${API_ENDPOINT}/user/register`, user);
+
+      Alert.alert("Registration Successful");
+      resetState();
+    } catch (error) {
+      console.log("error", error);
+      Alert.alert("Registration Failed", "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetState = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -95,8 +124,15 @@ const Register = () => {
         </View>
 
         <View style={{ marginTop: 80 }}>
-          <TouchableOpacity style={styles.actionButton}>
-            <Text style={styles.actionText}>Register</Text>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleRegister}
+          >
+            {loading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={styles.actionText}>Register</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useRouter } from "expo-router";
 import {
   Image,
@@ -9,15 +10,45 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
+import { API_ENDPOINT } from "../../../config";
 
 const Login = () => {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+    const user = { email, password };
+
+    try {
+      const response = await axios.post(`${API_ENDPOINT}/user/login`, user);
+      const token = response.data.token;
+
+      AsyncStorage.setItem("authToken", token);
+
+      resetState();
+      router.push("/");
+    } catch (error) {
+      Alert.alert("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetState = () => {
+    setEmail("");
+    setPassword("");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -76,8 +107,12 @@ const Login = () => {
         </View>
 
         <View style={{ marginTop: 80 }}>
-          <TouchableOpacity style={styles.actionButton}>
-            <Text style={styles.actionText}>Login</Text>
+          <TouchableOpacity style={styles.actionButton} onPress={handleLogin}>
+            {loading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={styles.actionText}>Login</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity
