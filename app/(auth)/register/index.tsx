@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
+import axios from "axios";
 import {
   ActivityIndicator,
   Alert,
@@ -14,8 +15,8 @@ import {
 } from "react-native";
 
 import { Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
-import axios from "axios";
 import { API_ENDPOINT } from "../../../config";
+import { useUserLoginStatus } from "../../hooks/useUserLoginStatus";
 
 const Register = () => {
   const router = useRouter();
@@ -25,6 +26,14 @@ const Register = () => {
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  const { authToken } = useUserLoginStatus();
+
+  useEffect(() => {
+    if (authToken) {
+      router.push("/home");
+    }
+  }, [authToken]);
 
   const handleRegister = async () => {
     setLoading(true);

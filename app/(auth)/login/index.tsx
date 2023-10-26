@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "expo-router";
 import {
@@ -17,9 +17,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { API_ENDPOINT } from "../../../config";
+import { useUserLoginStatus } from "../../hooks/useUserLoginStatus";
 
 const Login = () => {
   const router = useRouter();
+  const { authToken } = useUserLoginStatus();
+
+  useEffect(() => {
+    if (authToken) {
+      router.push("/home");
+    }
+  }, [authToken]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
