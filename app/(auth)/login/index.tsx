@@ -31,7 +31,7 @@ const Login = () => {
     const user = { email, password };
 
     try {
-      const response = await axios.post(`${API_ENDPOINT}/user/login`, user);
+      const response = await axios.post(`${API_ENDPOINT}/login`, user);
       const token = response.data.token;
 
       AsyncStorage.setItem("authToken", token);
@@ -39,7 +39,7 @@ const Login = () => {
       resetState();
       router.push("/home");
     } catch (error) {
-      Alert.alert("Something went wrong");
+      Alert.alert("Something went wrong", "Please try again");
     } finally {
       setLoading(false);
     }
@@ -107,9 +107,18 @@ const Login = () => {
         </View>
 
         <View style={{ marginTop: 80 }}>
-          <TouchableOpacity style={styles.actionButton} onPress={handleLogin}>
+          <TouchableOpacity
+            disabled={loading}
+            style={[
+              styles.actionButton,
+              {
+                opacity: loading ? 0.5 : 1,
+              },
+            ]}
+            onPress={handleLogin}
+          >
             {loading ? (
-              <ActivityIndicator />
+              <ActivityIndicator color="white" />
             ) : (
               <Text style={styles.actionText}>Login</Text>
             )}

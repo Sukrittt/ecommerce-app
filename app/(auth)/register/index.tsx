@@ -31,9 +31,12 @@ const Register = () => {
     const user = { name, email, password };
 
     try {
-      await axios.post(`${API_ENDPOINT}/user/register`, user);
+      await axios.post(`${API_ENDPOINT}/register`, user);
 
-      Alert.alert("Registration Successful");
+      Alert.alert(
+        "Registration Successful",
+        "Verify your email to login to your account"
+      );
       resetState();
     } catch (error) {
       console.log("error", error);
@@ -125,11 +128,17 @@ const Register = () => {
 
         <View style={{ marginTop: 80 }}>
           <TouchableOpacity
-            style={styles.actionButton}
+            disabled={loading}
+            style={[
+              styles.actionButton,
+              {
+                opacity: loading ? 0.5 : 1,
+              },
+            ]}
             onPress={handleRegister}
           >
             {loading ? (
-              <ActivityIndicator />
+              <ActivityIndicator color="white" />
             ) : (
               <Text style={styles.actionText}>Register</Text>
             )}

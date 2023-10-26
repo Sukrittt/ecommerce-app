@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const User = require("../models/user");
 const { sendVerificationEmail, generateSecretKey } = require("../helpers");
@@ -15,11 +16,12 @@ const register = async (req, res) => {
 
     const newUser = new User({ name, email, password });
 
-    newUser.verificationToken = crypto.randomUUID(20).toString("hex");
+    newUser.verificationToken = crypto.randomBytes(20).toString("hex");
 
     await newUser.save();
 
     sendVerificationEmail(newUser.email, newUser.verificationToken);
+    res.status(200).json({ message: "User created successfully" });
   } catch (error) {
     console.log("error", error);
     res.status(500).json({ message: "Could not register new user" });

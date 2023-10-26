@@ -25,10 +25,16 @@ mongoose
     console.log("Error❗", error);
   });
 
-app.listen(port, () => {
-  console.log(`Server is running on https://localhost:${port}`);
+app.listen(port, "192.168.140.150", () => {
+  console.log(
+    `Server is running on http://localhost:${port} or http://192.168.140.150:${port}`
+  );
 });
 
-const userRouter = require("./routers/user");
+app.get("/", (_, res) => res.send("Welcome to Amazon Clone api."));
 
-app.use("/user", userRouter);
+const { register, verifyToken, login } = require("./controllers/auth");
+
+app.post("/register", register);
+app.post("/login", login);
+app.get("/verify/:token", verifyToken);
