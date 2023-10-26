@@ -37,7 +37,7 @@ const Login = () => {
       AsyncStorage.setItem("authToken", token);
 
       resetState();
-      router.push("/");
+      router.push("/home");
     } catch (error) {
       Alert.alert("Something went wrong");
     } finally {
