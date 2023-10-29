@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -13,8 +14,13 @@ import { Product } from "../types";
 const { width: screenWidth } = Dimensions.get("window");
 
 const ProductItem = ({ product }: { product: Product }) => {
+  const router = useRouter();
+
   return (
-    <TouchableOpacity style={styles.productItemContainer}>
+    <TouchableOpacity
+      style={styles.productItemContainer}
+      onPress={() => router.push(`/product/${product.id}`)}
+    >
       <Image
         style={{ width: screenWidth / 2 - 40, height: screenWidth / 2 - 40 }}
         resizeMode="contain"
@@ -26,7 +32,7 @@ const ProductItem = ({ product }: { product: Product }) => {
       </Text>
 
       <View style={styles.productNumbers}>
-        <Text style={styles.productPrice}>{product.price}</Text>
+        <Text style={styles.productPrice}>₹{product.price}</Text>
         <Text style={styles.productRating}>{product.rating.rate} ratings</Text>
       </View>
 

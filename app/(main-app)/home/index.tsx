@@ -1,11 +1,13 @@
-import React from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "expo-router";
 import { SliderBox } from "react-native-image-slider-box";
+import DropDownPicker from "react-native-dropdown-picker";
+import { ScrollView as VirtualizedScrollView } from "react-native-virtualized-view";
 import {
   StyleSheet,
   SafeAreaView,
-  Platform,
   ScrollView,
+  Platform,
   View,
   TouchableOpacity,
   TextInput,
@@ -21,14 +23,42 @@ import {
 } from "@expo/vector-icons";
 
 import { useUserLoginStatus } from "../../hooks/useUserLoginStatus";
-import { categories, deals, eventImages, offers } from "../../data";
+import {
+  CATEGORY_DATA,
+  categories,
+  deals,
+  eventImages,
+  offers,
+} from "../../data";
 import useGetProducts from "../../hooks/useGetProducts";
+import SearchBar from "../../../components/search-bar";
 import ProductItem from "../../../components/product-item";
+
+type Category =
+  | "men's clothing"
+  | "women's clothing"
+  | "jewelery"
+  | "electronics";
 
 const Home = () => {
   const router = useRouter();
   const { authToken } = useUserLoginStatus();
   const { width: screenWidth } = Dimensions.get("window");
+
+  const [open, setOpen] = useState(false);
+  const [category, setCategory] = useState<Category>("jewelery");
+
+  const [companyOpen, setCompanyOpen] = useState(false);
+  const [categoryItems, setCategoryItems] =
+    useState<{ label: string; value: Category }[]>(CATEGORY_DATA);
+
+  const onGenderOpen = useCallback(() => {
+    setCompanyOpen(false);
+  }, []);
+
+  const onChange = useCallback(() => {
+    // setCompanyOpen(false)
+  }, []);
 
   const { products } = useGetProducts();
 
@@ -39,20 +69,8 @@ const Home = () => {
         { paddingTop: Platform.OS === "android" ? 40 : 0 },
       ]}
     >
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.searchContainer}>
-          <TouchableOpacity style={styles.searchBtn}>
-            <AntDesign
-              style={{ paddingLeft: 10 }}
-              name="search1"
-              size={22}
-              color="black"
-            />
-            <TextInput placeholder="Search Amazon.in" />
-          </TouchableOpacity>
-
-          <Feather name="mic" size={24} color="black" />
-        </View>
+      <VirtualizedScrollView showsVerticalScrollIndicator={false}>
+        <SearchBar />
 
         <View style={styles.locationContainer}>
           <Ionicons name="location-outline" size={24} color="black" />
@@ -111,7 +129,11 @@ const Home = () => {
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {offers.map((offer) => (
-            <TouchableOpacity key={offer.id} style={styles.offerBtn}>
+            <TouchableOpacity
+              key={offer.id}
+              style={styles.offerBtn}
+              onPress={() => router.push(`/offer/${offer.id}`)}
+            >
               <Image
                 style={{ height: 150, width: 150 }}
                 resizeMode="contain"
@@ -127,12 +149,39 @@ const Home = () => {
 
         <Text style={styles.border} />
 
-        <View style={styles.productContainer}>
-          {products.map((product) => (
-            <ProductItem key={product.id} product={product} />
-          ))}
+        <View
+          style={{
+            marginHorizontal: 10,
+            marginTop: 20,
+            width: "45%",
+            marginBottom: open ? 50 : 15,
+          }}
+        >
+          <DropDownPicker
+            style={[styles.dropdownPicker, { marginBottom: open ? 120 : 15 }]}
+            open={open}
+            value={category}
+            items={categoryItems}
+            setOpen={setOpen}
+            setValue={setCategory}
+            setItems={setCategoryItems}
+            placeholder="Choose a category"
+            // placeholderStyle={styles.placeholderStyles}
+            onOpen={onGenderOpen}
+            // onChangeValue={onChange}
+            zIndex={3000}
+            zIndexInverse={1000}
+          />
         </View>
-      </ScrollView>
+
+        <View style={styles.productContainer}>
+          {products
+            .filter((product) => product.category === category)
+            .map((product) => (
+              <ProductItem key={product.id} product={product} />
+            ))}
+        </View>
+      </VirtualizedScrollView>
     </SafeAreaView>
   );
 };
@@ -143,22 +192,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  },
-  searchContainer: {
-    backgroundColor: "#00ced1",
-    padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  searchBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: 7,
-    gap: 10,
-    backgroundColor: "white",
-    borderRadius: 3,
-    height: 38,
-    flex: 1,
   },
   locationContainer: {
     flexDirection: "row",
@@ -227,5 +260,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
+  },
+  dropdownPicker: {
+    borderColor: "#B7B7B7",
+    height: 30,
   },
 });

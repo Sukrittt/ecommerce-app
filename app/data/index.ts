@@ -170,3 +170,10 @@ export const offers = [
     size: "8GB RAM, 128GB Storage",
   },
 ];
+
+export const CATEGORY_DATA = [
+  { label: "Men's clothing", value: "men's clothing" as const },
+  { label: "Jewelery", value: "jewelery" as const },
+  { label: "Electronics", value: "electronics" as const },
+  { label: "Women's clothing", value: "women's clothing" as const },
+];
