@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { useRouter } from "expo-router";
 import {
   StyleSheet,
@@ -10,16 +10,28 @@ import {
 } from "react-native";
 
 import { Product } from "../types";
+import { addToCart } from "../redux/cart-reducer";
+import { useAppDispatch, useAppSelector } from "../app/hooks/useReduxTypeHook";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 const ProductItem = ({ product }: { product: Product }) => {
-  const router = useRouter();
+  // const router = useRouter();
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  const dispatch = useAppDispatch();
+
+  const addToCartHandler = () => {
+    setAddedToCart(true);
+    dispatch(addToCart(product));
+
+    setTimeout(() => setAddedToCart(false), 30_000);
+  };
 
   return (
     <TouchableOpacity
       style={styles.productItemContainer}
-      onPress={() => router.push(`/product/${product.id}`)}
+      // onPress={() => router.push(`/product/${product.id}`)}
     >
       <Image
         style={{ width: screenWidth / 2 - 40, height: screenWidth / 2 - 40 }}
@@ -36,8 +48,8 @@ const ProductItem = ({ product }: { product: Product }) => {
         <Text style={styles.productRating}>{product.rating.rate} ratings</Text>
       </View>
 
-      <TouchableOpacity style={styles.addToCartBtn}>
-        <Text>Add to Cart</Text>
+      <TouchableOpacity style={styles.addToCartBtn} onPress={addToCartHandler}>
+        <Text>{addedToCart ? "Added" : "Add"} to Cart</Text>
       </TouchableOpacity>
     </TouchableOpacity>
   );

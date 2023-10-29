@@ -1,44 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Product } from "../types";
+import { Offer } from "../types";
 
-type ExtendedCart = Product & { quantity: number };
+type ExtendedCart = Offer & { quantity: number };
 
 export const CartSlice = createSlice({
   name: "cart",
   initialState: {
-    cart: [] as ExtendedCart[],
+    cartItems: [] as ExtendedCart[],
   },
   reducers: {
-    addTCart: (state, action) => {
-      const alreadyInCart = state.cart.find(
-        (cartItem) => cartItem === action.payload.id
+    addToCart: (state, action) => {
+      const alreadyInCart = state.cartItems.find(
+        (cartItem) => cartItem.id === action.payload.id
       );
 
       if (alreadyInCart) {
         alreadyInCart.quantity++;
       } else {
-        state.cart.push({ ...action.payload, quantity: 1 });
+        state.cartItems.push({ ...action.payload, quantity: 1 });
       }
     },
     removeFromCart: (state, action) => {
-      state.cart = state.cart.filter(
+      state.cartItems = state.cartItems.filter(
         (cartItem) => cartItem.id !== action.payload.id
       );
     },
     incrementQuantity: (state, action) => {
-      const incrementItem = state.cart.find(
+      const incrementItem = state.cartItems.find(
         (cartItem) => cartItem.id === action.payload.id
       );
       incrementItem.quantity++;
     },
     decrementQuantity: (state, action) => {
-      const existingItemInCart = state.cart.find(
+      const existingItemInCart = state.cartItems.find(
         (cartItem) => cartItem.id === action.payload.id
       );
 
       if (existingItemInCart.quantity === 1) {
         existingItemInCart.quantity = 0;
-        state.cart = state.cart.filter(
+        state.cartItems = state.cartItems.filter(
           (cartItem) => cartItem.id !== action.payload.id
         );
       } else {
@@ -46,13 +46,13 @@ export const CartSlice = createSlice({
       }
     },
     clearCart: (state) => {
-      state.cart = [];
+      state.cartItems = [];
     },
   },
 });
 
 export const {
-  addTCart,
+  addToCart,
   removeFromCart,
   incrementQuantity,
   decrementQuantity,

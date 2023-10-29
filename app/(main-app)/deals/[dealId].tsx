@@ -15,7 +15,7 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 
-import { offers } from "../../data";
+import { deals } from "../../data";
 import { Offer } from "../../../types";
 import SearchBar from "../../../components/search-bar";
 import { addToCart } from "../../../redux/cart-reducer";
@@ -23,17 +23,17 @@ import { useAppDispatch } from "../../hooks/useReduxTypeHook";
 
 const { width } = Dimensions.get("window");
 
-const OfferPage = () => {
-  const { offerId } = useLocalSearchParams<{ offerId: string }>();
-  const offer = offers.find((offer) => offer.id === offerId);
+const DealPage = () => {
+  const { dealId } = useLocalSearchParams<{ dealId: string }>();
+  const deal = deals.find((deal) => deal.id === dealId);
 
   const [addedToCart, setAddedToCart] = useState(false);
 
   const dispatch = useAppDispatch();
 
-  const addToCartHandler = (offer: Offer) => {
+  const addToCartHandler = (deal: Offer) => {
     setAddedToCart(true);
-    dispatch(addToCart(offer));
+    dispatch(addToCart(deal));
 
     setTimeout(() => {
       setAddedToCart(false);
@@ -45,9 +45,9 @@ const OfferPage = () => {
       <SearchBar />
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {offer.carouselImages.map((offerItem, index) => (
+        {deal.carouselImages.map((dealItem, index) => (
           <ImageBackground
-            source={{ uri: offerItem }}
+            source={{ uri: dealItem }}
             resizeMode="contain"
             style={{
               marginTop: 25,
@@ -57,8 +57,8 @@ const OfferPage = () => {
             key={index}
           >
             <View style={styles.outerContainer}>
-              <View style={styles.offerContainer}>
-                <Text style={styles.offerText}>20% off</Text>
+              <View style={styles.dealContainer}>
+                <Text style={styles.dealText}>20% off</Text>
               </View>
 
               <View>
@@ -78,8 +78,8 @@ const OfferPage = () => {
       </ScrollView>
 
       <View style={{ padding: 10 }}>
-        <Text style={{ fontSize: 14, color: "#424242" }}>{offer.title}</Text>
-        <Text style={styles.offerPriceText}>₹{offer.price}</Text>
+        <Text style={{ fontSize: 14, color: "#424242" }}>{deal.title}</Text>
+        <Text style={styles.dealPriceText}>₹{deal.price}</Text>
       </View>
 
       <Text style={styles.border} />
@@ -87,14 +87,12 @@ const OfferPage = () => {
       <View style={styles.colorSizeContainer}>
         <View style={styles.detailsContainer}>
           <Text>Color: </Text>
-          <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-            {offer.color}
-          </Text>
+          <Text style={{ fontSize: 15, fontWeight: "bold" }}>{deal.color}</Text>
         </View>
 
         <View style={styles.detailsContainer}>
           <Text>Size: </Text>
-          <Text style={{ fontSize: 15, fontWeight: "bold" }}>{offer.size}</Text>
+          <Text style={{ fontSize: 15, fontWeight: "bold" }}>{deal.size}</Text>
         </View>
       </View>
 
@@ -102,7 +100,7 @@ const OfferPage = () => {
 
       <View style={{ padding: 10 }}>
         <Text style={styles.largePriceText}>
-          Total <Text style={{ fontSize: 20 }}>₹{offer.price}</Text>
+          Total <Text style={{ fontSize: 20 }}>₹{deal.price}</Text>
         </Text>
         <Text>FREE delivery by tomorrow 3pm. Order within 1hr 32mins.</Text>
 
@@ -119,7 +117,7 @@ const OfferPage = () => {
 
       <TouchableOpacity
         style={styles.addToCartBtn}
-        onPress={() => addToCartHandler(offer)}
+        onPress={() => addToCartHandler(deal)}
       >
         <Text>{addedToCart ? "Added" : "Add"} to Cart</Text>
       </TouchableOpacity>
@@ -131,7 +129,7 @@ const OfferPage = () => {
   );
 };
 
-export default OfferPage;
+export default DealPage;
 
 const styles = StyleSheet.create({
   container: {
@@ -145,7 +143,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  offerContainer: {
+  dealContainer: {
     width: 45,
     height: 45,
     borderRadius: 9999,
@@ -155,13 +153,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  offerText: {
+  dealText: {
     color: "white",
     textAlign: "center",
     fontWeight: "600",
     fontSize: 12,
   },
-  offerPriceText: {
+  dealPriceText: {
     fontSize: 18,
     fontWeight: "600",
     marginTop: 6,

@@ -10,19 +10,12 @@ import {
   Platform,
   View,
   TouchableOpacity,
-  TextInput,
   Text,
   Image,
   Dimensions,
 } from "react-native";
-import {
-  AntDesign,
-  Feather,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
-import { useUserLoginStatus } from "../../hooks/useUserLoginStatus";
 import {
   CATEGORY_DATA,
   categories,
@@ -42,8 +35,9 @@ type Category =
 
 const Home = () => {
   const router = useRouter();
-  const { authToken } = useUserLoginStatus();
   const { width: screenWidth } = Dimensions.get("window");
+
+  const { products } = useGetProducts();
 
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<Category>("jewelery");
@@ -59,8 +53,6 @@ const Home = () => {
   const onChange = useCallback(() => {
     // setCompanyOpen(false)
   }, []);
-
-  const { products } = useGetProducts();
 
   return (
     <SafeAreaView
@@ -113,7 +105,11 @@ const Home = () => {
 
         <View style={styles.dealContainer}>
           {deals.map((deal) => (
-            <TouchableOpacity key={deal.id} style={styles.dealBtn}>
+            <TouchableOpacity
+              key={deal.id}
+              style={styles.dealBtn}
+              onPress={() => router.push(`/deals/${deal.id}`)}
+            >
               <Image
                 source={{ uri: deal.image }}
                 style={{ width: screenWidth / 2, height: screenWidth / 2 }}

@@ -77,14 +77,14 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="product/[productId]"
+        name="offer/[offerId]"
         options={{
           headerShown: false,
           href: null,
         }}
       />
       <Tabs.Screen
-        name="offer/[offerId]"
+        name="deals/[dealId]"
         options={{
           headerShown: false,
           href: null,
