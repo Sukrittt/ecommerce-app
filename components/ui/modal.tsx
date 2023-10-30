@@ -31,7 +31,7 @@ interface ModalProps {
 }
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
-const MODAL_HEIGHT = screenHeight * 0.65;
+const MODAL_HEIGHT = screenHeight * 0.5;
 
 export const Modal = ({ onClose, showModal, children, style }: ModalProps) => {
   const overlayOpacity = useSharedValue(0.5);
@@ -140,8 +140,14 @@ export const Modal = ({ onClose, showModal, children, style }: ModalProps) => {
   );
 };
 
-export const ModalContent = ({ children }: { children: React.ReactNode }) => {
-  return <>{children}</>;
+export const ModalContent = ({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+}) => {
+  return <View style={style}>{children}</View>;
 };
 
 const styles = StyleSheet.create({

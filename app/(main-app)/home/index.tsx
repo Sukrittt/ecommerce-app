@@ -62,10 +62,13 @@ const Home = () => {
       <SafeAreaView
         style={[
           styles.container,
-          { paddingTop: Platform.OS === "android" ? 40 : 0 },
+          { paddingTop: Platform.OS === "android" ? 30 : 0 },
         ]}
       >
-        <VirtualizedScrollView showsVerticalScrollIndicator={false}>
+        <VirtualizedScrollView
+          style={{ backgroundColor: "white" }}
+          showsVerticalScrollIndicator={false}
+        >
           <SearchBar />
 
           <TouchableOpacity
@@ -195,13 +198,14 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#00ced1",
   },
   locationContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
     padding: 10,
+    marginTop: -1,
     backgroundColor: "#afeeee",
   },
   locationText: {

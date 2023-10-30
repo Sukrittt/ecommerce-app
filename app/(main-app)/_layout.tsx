@@ -90,6 +90,20 @@ const TabsLayout = () => {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="address/index"
+        options={{
+          headerShown: false,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="address/add/index"
+        options={{
+          headerShown: false,
+          href: null,
+        }}
+      />
     </Tabs>
   );
 };
