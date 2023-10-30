@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import { useUserLoginStatus } from "../../../hooks/useUserLoginStatus";
+
 const AddAdress = () => {
   const [name, setName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
@@ -18,6 +20,8 @@ const AddAdress = () => {
   const [street, setStreet] = useState("");
   const [landmark, setLandmark] = useState("");
   const [postalCode, setPostalCode] = useState("");
+
+  const handleAddAdress = () => {};
 
   return (
     <SafeAreaView
@@ -118,7 +122,10 @@ const AddAdress = () => {
             />
           </View>
 
-          <TouchableOpacity style={styles.addAddressBtn}>
+          <TouchableOpacity
+            style={styles.addAddressBtn}
+            onPress={handleAddAdress}
+          >
             <Text style={{ fontSize: 15 }}>Add address</Text>
           </TouchableOpacity>
         </View>

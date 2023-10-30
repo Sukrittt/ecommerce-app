@@ -64,7 +64,7 @@ export const Modal = ({ onClose, showModal, children, style }: ModalProps) => {
     overlayHeight.value = withTiming(0);
   };
 
-  const handleTapGesture =
+  const tapGestureHandler =
     useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
       onStart: () => {
         height.value = withSpring(0);
@@ -96,6 +96,14 @@ export const Modal = ({ onClose, showModal, children, style }: ModalProps) => {
       },
     });
 
+  const outsideTapGestureHandler =
+    useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
+      onStart: () => {
+        modalEndingAnimation();
+        runOnJS(onClose)();
+      },
+    });
+
   const rAnimatedStyle = useAnimatedStyle(() => {
     return {
       height: height.value,
@@ -121,11 +129,13 @@ export const Modal = ({ onClose, showModal, children, style }: ModalProps) => {
 
   return (
     <>
-      <Animated.View style={[styles.overlay, rAnimatedOverlayStyle]} />
+      <TapGestureHandler onGestureEvent={outsideTapGestureHandler}>
+        <Animated.View style={[styles.overlay, rAnimatedOverlayStyle]} />
+      </TapGestureHandler>
       <PanGestureHandler onGestureEvent={panGestureEventHandler}>
         <Animated.View style={rAnimatedDisplayStyle}>
           <Animated.View style={[style, rAnimatedStyle]}>
-            <TapGestureHandler onGestureEvent={handleTapGesture}>
+            <TapGestureHandler onGestureEvent={tapGestureHandler}>
               <Animated.View style={styles.closeBtn}>
                 <TouchableOpacity onPress={onClose}>
                   <AntDesign name="closecircleo" size={22} color="#303030" />
