@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { SliderBox } from "react-native-image-slider-box";
 import DropDownPicker from "react-native-dropdown-picker";
 import { ScrollView as VirtualizedScrollView } from "react-native-virtualized-view";
+import { BottomModal, ModalContent, SlideAnimation } from "react-native-modals";
 import {
   StyleSheet,
   SafeAreaView,
@@ -26,6 +27,7 @@ import {
 import useGetProducts from "../../hooks/useGetProducts";
 import SearchBar from "../../../components/search-bar";
 import ProductItem from "../../../components/product-item";
+import AddressModal from "../../../components/address-modal";
 
 type Category =
   | "men's clothing"
@@ -36,6 +38,7 @@ type Category =
 const Home = () => {
   const router = useRouter();
   const { width: screenWidth } = Dimensions.get("window");
+  const [showModal, setShowModal] = useState(false);
 
   const { products } = useGetProducts();
 
@@ -55,130 +58,135 @@ const Home = () => {
   }, []);
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        { paddingTop: Platform.OS === "android" ? 40 : 0 },
-      ]}
-    >
-      <VirtualizedScrollView showsVerticalScrollIndicator={false}>
-        <SearchBar />
+    <>
+      <SafeAreaView
+        style={[
+          styles.container,
+          { paddingTop: Platform.OS === "android" ? 40 : 0 },
+        ]}
+      >
+        <VirtualizedScrollView showsVerticalScrollIndicator={false}>
+          <SearchBar />
 
-        <View style={styles.locationContainer}>
-          <Ionicons name="location-outline" size={24} color="black" />
+          <TouchableOpacity
+            style={styles.locationContainer}
+            onPress={() => setShowModal((prev) => !prev)}
+          >
+            <Ionicons name="location-outline" size={24} color="black" />
 
-          <TouchableOpacity>
             <Text style={styles.locationText}>
               Deliver to Sukrit - Bangalore 560029
             </Text>
+
+            <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
           </TouchableOpacity>
 
-          <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
-        </View>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {categories.map((category) => (
-            <TouchableOpacity key={category.id} style={styles.categoryBtn}>
-              <Image
-                source={{ uri: category.image }}
-                style={{
-                  height: 50,
-                  width: 50,
-                }}
-                resizeMode="contain"
-              />
-              <Text style={styles.categoryText}>{category.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        <SliderBox
-          images={eventImages}
-          autoplay
-          circleloop
-          dotColor="#13274f"
-          inactiveDotColor="#90a4ae"
-          ImageComponentStyle={{ width: "100%" }}
-        />
-
-        <Text style={styles.dealHeading}>Trending Deals of the week</Text>
-
-        <View style={styles.dealContainer}>
-          {deals.map((deal) => (
-            <TouchableOpacity
-              key={deal.id}
-              style={styles.dealBtn}
-              onPress={() => router.push(`/deals/${deal.id}`)}
-            >
-              <Image
-                source={{ uri: deal.image }}
-                style={{ width: screenWidth / 2, height: screenWidth / 2 }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <Text style={styles.border} />
-
-        <Text style={styles.dealHeading}>Today's Deals</Text>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {offers.map((offer) => (
-            <TouchableOpacity
-              key={offer.id}
-              style={styles.offerBtn}
-              onPress={() => router.push(`/offer/${offer.id}`)}
-            >
-              <Image
-                style={{ height: 150, width: 150 }}
-                resizeMode="contain"
-                source={{ uri: offer.image }}
-              />
-
-              <View style={styles.offerContainer}>
-                <Text style={styles.offerText}>Upto {offer.offer}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        <Text style={styles.border} />
-
-        <View
-          style={{
-            marginHorizontal: 10,
-            marginTop: 20,
-            width: "45%",
-            marginBottom: open ? 50 : 15,
-          }}
-        >
-          <DropDownPicker
-            style={[styles.dropdownPicker, { marginBottom: open ? 120 : 15 }]}
-            open={open}
-            value={category}
-            items={categoryItems}
-            setOpen={setOpen}
-            setValue={setCategory}
-            setItems={setCategoryItems}
-            placeholder="Choose a category"
-            // placeholderStyle={styles.placeholderStyles}
-            onOpen={onGenderOpen}
-            // onChangeValue={onChange}
-            zIndex={3000}
-            zIndexInverse={1000}
-          />
-        </View>
-
-        <View style={styles.productContainer}>
-          {products
-            .filter((product) => product.category === category)
-            .map((product) => (
-              <ProductItem key={product.id} product={product} />
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {categories.map((category) => (
+              <TouchableOpacity key={category.id} style={styles.categoryBtn}>
+                <Image
+                  source={{ uri: category.image }}
+                  style={{
+                    height: 50,
+                    width: 50,
+                  }}
+                  resizeMode="contain"
+                />
+                <Text style={styles.categoryText}>{category.name}</Text>
+              </TouchableOpacity>
             ))}
-        </View>
-      </VirtualizedScrollView>
-    </SafeAreaView>
+          </ScrollView>
+
+          {/* <SliderBox
+            images={eventImages}
+            autoplay
+            circleloop
+            dotColor="#13274f"
+            inactiveDotColor="#90a4ae"
+            ImageComponentStyle={{ width: "100%" }}
+          /> */}
+
+          <Text style={styles.dealHeading}>Trending Deals of the week</Text>
+
+          <View style={styles.dealContainer}>
+            {deals.map((deal) => (
+              <TouchableOpacity
+                key={deal.id}
+                style={styles.dealBtn}
+                onPress={() => router.push(`/deals/${deal.id}`)}
+              >
+                <Image
+                  source={{ uri: deal.image }}
+                  style={{ width: screenWidth / 2, height: screenWidth / 2 }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <Text style={styles.border} />
+
+          <Text style={styles.dealHeading}>Today's Deals</Text>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {offers.map((offer) => (
+              <TouchableOpacity
+                key={offer.id}
+                style={styles.offerBtn}
+                onPress={() => router.push(`/offer/${offer.id}`)}
+              >
+                <Image
+                  style={{ height: 150, width: 150 }}
+                  resizeMode="contain"
+                  source={{ uri: offer.image }}
+                />
+
+                <View style={styles.offerContainer}>
+                  <Text style={styles.offerText}>Upto {offer.offer}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          <Text style={styles.border} />
+
+          <View
+            style={{
+              marginHorizontal: 10,
+              marginTop: 20,
+              width: "45%",
+              marginBottom: open ? 50 : 15,
+            }}
+          >
+            <DropDownPicker
+              style={[styles.dropdownPicker, { marginBottom: open ? 120 : 15 }]}
+              open={open}
+              value={category}
+              items={categoryItems}
+              setOpen={setOpen}
+              setValue={setCategory}
+              setItems={setCategoryItems}
+              placeholder="Choose a category"
+              // placeholderStyle={styles.placeholderStyles}
+              onOpen={onGenderOpen}
+              // onChangeValue={onChange}
+              zIndex={3000}
+              zIndexInverse={1000}
+            />
+          </View>
+
+          <View style={styles.productContainer}>
+            {products
+              .filter((product) => product.category === category)
+              .map((product) => (
+                <ProductItem key={product.id} product={product} />
+              ))}
+          </View>
+        </VirtualizedScrollView>
+      </SafeAreaView>
+
+      <AddressModal showModal={showModal} setShowModal={setShowModal} />
+    </>
   );
 };
 
